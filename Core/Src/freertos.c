@@ -54,6 +54,13 @@ const osThreadAttr_t MQTT_Task_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for ReciveTask */
+osThreadId_t ReciveTaskHandle;
+const osThreadAttr_t ReciveTask_attributes = {
+  .name = "ReciveTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -61,6 +68,7 @@ const osThreadAttr_t MQTT_Task_attributes = {
 /* USER CODE END FunctionPrototypes */
 
 void StartMQTTTask(void *argument);
+void StartRecive02(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -94,6 +102,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of MQTT_Task */
   MQTT_TaskHandle = osThreadNew(StartMQTTTask, NULL, &MQTT_Task_attributes);
 
+  /* creation of ReciveTask */
+  ReciveTaskHandle = osThreadNew(StartRecive02, NULL, &ReciveTask_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -120,6 +131,24 @@ __weak void StartMQTTTask(void *argument)
     osDelay(1);
   }
   /* USER CODE END StartMQTTTask */
+}
+
+/* USER CODE BEGIN Header_StartRecive02 */
+/**
+* @brief Function implementing the ReciveTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartRecive02 */
+__weak void StartRecive02(void *argument)
+{
+  /* USER CODE BEGIN StartRecive02 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartRecive02 */
 }
 
 /* Private application code --------------------------------------------------*/

@@ -82,10 +82,21 @@ if (root == NULL) {
             // 所以必须先写圈数寄存器,再写开机线圈触发,否则电机用的还是上一条的圈数。
             // ① 先写圈数寄存器
             Modbus_Write_Single_Reg(0x05, 2, motor_set_num->valueint + 500);
-            // ② 后写开机线圈 => 触发电机按刚写入的圈数转动
+            // ② 后写开机线圈 => 触发电机按刚写入的圈数转动 (写ON=0xFF00)
             Modbus_Write_Coil(0x05, 2, 0xff);
         }
     }
+    else if (cJSON_IsBool(motor_status) && motor_status->valueint == 0)
+    {
+        debug_printf("需要停机\r\n");
+        // 停止电机: 把开机线圈写OFF(0x0000), 从站收到下降沿(1->0)立即停止
+        Modbus_Write_Coil(0x05, 2, 0x00);
+    }
+
+    //读取当前电机状态
+    Modbus_Read_Coil(0x05, 2, 1);//停止/启动
+    Modbus_Read_Discrete(0x05, 3, 1);//转向
+    Modbus_Read_Single_Reg(0x05, 2, 1);//当前圈数
 
      // 释放内存
     // delete删除结构体

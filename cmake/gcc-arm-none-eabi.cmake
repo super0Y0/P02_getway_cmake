@@ -28,9 +28,11 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${TARGET_FLAGS}")
 set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -x assembler-with-cpp -MMD -MP")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fdata-sections -ffunction-sections")
 
-set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
+# STM32F103C8 只有 64KB Flash，加入 Task2/HAL 接收代码后 Debug(-O0) 会溢出。
+# 将 Debug 优化等级改为 -Os（按尺寸优化），保留 -g3 调试信息。
+set(CMAKE_C_FLAGS_DEBUG "-Os -g3")
 set(CMAKE_C_FLAGS_RELEASE "-Os -g0")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
+set(CMAKE_CXX_FLAGS_DEBUG "-Os -g3")
 set(CMAKE_CXX_FLAGS_RELEASE "-Os -g0")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -fno-threadsafe-statics")

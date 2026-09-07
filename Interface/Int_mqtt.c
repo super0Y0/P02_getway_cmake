@@ -11,8 +11,8 @@ uint16_t server_port = 1883;
 
 MQTTClient mqttClient;
 Network network;
-uint8_t mqtt_send_buff[1024] = {0};
-uint8_t mqtt_recv_buff[1024] = {0};
+uint8_t mqtt_send_buff[512] = {0};
+uint8_t mqtt_recv_buff[512] = {0};
 
 #define PULL_TOPIC "pull_yy"
 #define PUSH_TOPIC "push_yy"
@@ -71,7 +71,7 @@ void Int_MQTT_Init(void)
     }
     debug_printf("ConnectNetwork success\r\n");
     // 2.3 使用连接完成的套接字创建MQTT客户端
-    MQTTClientInit(&mqttClient, &network, 3000, mqtt_send_buff, 1024, mqtt_recv_buff, 1024);
+    MQTTClientInit(&mqttClient, &network, 3000, mqtt_send_buff, 512, mqtt_recv_buff, 512);
 
     // 2.4 填写连接的参数
     MQTTPacket_connectData data = MQTTPacket_connectData_initializer;

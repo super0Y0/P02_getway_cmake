@@ -18,6 +18,10 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
+# STM32F103C8 只有 64KB Flash，加入 Task2/HAL 接收代码后 Debug(-O0) 会溢出。
+# 保持 Debug 工作流不变，仅将优化等级改为 -Os（按尺寸优化），并保留 -g3 调试信息。
+set(CMAKE_C_FLAGS_DEBUG "-Os -g3" CACHE STRING "" FORCE)
+
 # Set the project name
 set(CMAKE_PROJECT_NAME P02_getway)
 
@@ -51,6 +55,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     common/com_debug.c
     Application/Tasks/MQTT_Task.c
+    Application/Tasks/Task2.c
     ${INTERFACE_SOURCES}
     common/cJSON.c
    
